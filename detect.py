@@ -17,6 +17,10 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
+    if opt.i_start is not None and opt.i_end is not None:
+        i_range = [opt.i_start, opt.i_end]
+    else:
+        i_range = None
     save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
@@ -54,7 +58,7 @@ def detect(save_img=False):
         cudnn.benchmark = True  # set True to speed up constant image size inference
         dataset = LoadStreams(source, img_size=imgsz, stride=stride)
     else:
-        dataset = LoadImages(source, img_size=imgsz, stride=stride)
+        dataset = LoadImages(source, img_size=imgsz, stride=stride, i_range=i_range)
 
     # Get names and colors
     names = model.module.names if hasattr(model, 'module') else model.names
@@ -183,7 +187,13 @@ if __name__ == '__main__':
     parser.add_argument('--name', default='exp', help='save results to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser.add_argument('--no-trace', action='store_true', help='don`t trace model')
+    parser.add_argument('--i_start', type=int, default=None, help='The start idx of sorted files loaded in the dir')
+    parser.add_argument('--i_end', type=int, default=None, help='The end idx of sorted files loaded in the dir')
     opt = parser.parse_args()
+    # Namespace(weights=['./runs/train/yolov7/weights/best.pt'], source='./coco/images/val2017/', img_size=320,
+    # conf_thres=0.25, iou_thres=0.45, device='', view_img=False, save_txt=True,
+    # save_conf=False, nosave=False, classes=None, agnostic_nms=False, augment=False, update=False,
+    # project='runs/detect', name='exp', exist_ok=False, no_trace=False)
     print(opt)
     #check_requirements(exclude=('pycocotools', 'thop'))
 
