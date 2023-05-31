@@ -193,7 +193,7 @@ if __name__ == '__main__':
     parser.add_argument('--no-trace', action='store_true', help='don`t trace model')
     parser.add_argument('--i_start', type=int, default=None, help='The start idx of sorted files loaded in the dir')
     parser.add_argument('--i_end', type=int, default=None, help='The end idx of sorted files loaded in the dir')
-    parser.add_argument('--increment_path', type=bool, default=True, help='Whether automatically increase the name of save directory')
+    parser.add_argument('--increment_path', action='store_false', default=True, help='Whether automatically increase the name of save directory')
     opt = parser.parse_args()
     # Namespace(weights=['./runs/train/yolov7/weights/best.pt'], source='./coco/images/val2017/', img_size=320,
     # conf_thres=0.25, iou_thres=0.45, device='', view_img=False, save_txt=True,
