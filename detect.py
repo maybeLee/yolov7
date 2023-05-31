@@ -26,7 +26,11 @@ def detect(save_img=False):
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
     # Directories
-    save_dir = Path(increment_path(Path(opt.project) / opt.name, exist_ok=opt.exist_ok))  # increment run
+    if opt.increment_path is True:
+        save_dir = Path(increment_path(Path(opt.project) / opt.name, exist_ok=opt.exist_ok))  # increment run
+    else:
+        save_dir = Path(opt.project) / opt.name
+
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Initialize
@@ -189,6 +193,7 @@ if __name__ == '__main__':
     parser.add_argument('--no-trace', action='store_true', help='don`t trace model')
     parser.add_argument('--i_start', type=int, default=None, help='The start idx of sorted files loaded in the dir')
     parser.add_argument('--i_end', type=int, default=None, help='The end idx of sorted files loaded in the dir')
+    parser.add_argument('--increment_path', type=bool, default=True, help='Whether automatically increase the name of save directory')
     opt = parser.parse_args()
     # Namespace(weights=['./runs/train/yolov7/weights/best.pt'], source='./coco/images/val2017/', img_size=320,
     # conf_thres=0.25, iou_thres=0.45, device='', view_img=False, save_txt=True,
