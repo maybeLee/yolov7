@@ -349,18 +349,7 @@ class LoadStreams:  # multiple IP or RTSP cameras
 def img2label_paths(img_paths):
     # Define label paths as a function of image paths
     sa, sb = os.sep + 'images' + os.sep, os.sep + 'labels' + os.sep  # /images/, /labels/ substrings
-    img_dir = os.path.dirname(img_paths[0])
-    label_dir = img_dir.replace(sa, sb, 1)
-    if os.path.isdir(label_dir):
-        return ['txt'.join(x.replace(sa, sb, 1).rsplit(x.split('.')[-1], 1)) for x in img_paths]
-    elif "ObjectGaussianMutation" in img_dir:
-        # if label_dir does not, we use coco's original label (./coco/labels/train2017)
-        label_dir = "./coco/labels/train2017"
-        label_paths = []
-        for img in img_paths:
-            x = os.path.join(label_dir, os.path.basename(img))
-            label_paths.append('txt'.join(x.rsplit(x.split('.')[-1], 1)))
-        return label_paths
+    return ['txt'.join(x.replace(sa, sb, 1).rsplit(x.split('.')[-1], 1)) for x in img_paths]
 
 
 class LoadImagesAndLabels(Dataset):  # for training/testing
