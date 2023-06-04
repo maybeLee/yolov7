@@ -351,7 +351,7 @@ def img2label_paths(img_paths):
     sa, sb = os.sep + 'images' + os.sep, os.sep + 'labels' + os.sep  # /images/, /labels/ substrings
     img_dir = os.path.dirname(img_paths[0])
     label_dir = img_dir.replace(sa, sb, 1)
-    if os.path.isdir(label_dir):
+    if os.path.isdir(label_dir) and sa in img_dir:
         return ['txt'.join(x.replace(sa, sb, 1).rsplit(x.split('.')[-1], 1)) for x in img_paths]
     elif "ObjectGaussianMutation" in img_dir:
         # if label_dir does not, we use coco's original label (./coco/labels/train2017)
@@ -422,7 +422,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         self.labels = list(labels)
         self.shapes = np.array(shapes, dtype=np.float64)
         self.img_files = list(cache.keys())  # update
-        self.label_files = img2label_paths(cache.keys())  # update
+        self.label_files = img2label_paths(list(cache.keys()))  # update
         if single_cls:
             for x in self.labels:
                 x[:, 0] = 0
