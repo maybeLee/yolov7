@@ -355,7 +355,8 @@ def img2label_paths(img_paths):
         return ['txt'.join(x.replace(sa, sb, 1).rsplit(x.split('.')[-1], 1)) for x in img_paths]
     elif "ObjectGaussianMutation" in img_dir:
         # if label_dir does not, we use coco's original label (./coco/labels/train2017)
-        label_dir = "./coco/labels/train2017"
+        label_dir = os.path.join(img_dir.split("/ObjectGaussianMutation/")[0], "labels")
+        label_dir = os.path.join(label_dir, "train2017") if "coco/" in label_dir else os.path.join(label_dir, "train")
         label_paths = []
         for img in img_paths:
             x = os.path.join(label_dir, os.path.basename(img))
